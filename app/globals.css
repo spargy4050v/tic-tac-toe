@@ -3,11 +3,6 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -23,4 +18,40 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+/*CSS Grid for the 3x3 board */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 60px);
+  grid-template-rows: repeat(3, 60px);
+  gap: 0;
+  border: 2px solid #333;
+  width: max-content;
+  background: #fff;
+}
+/* Allows the grid to treat all buttons as direct children */
+.flex.flex-row {
+  display: contents;
+}
+/* CSS for the squares */
+.square {
+  width: 60px;
+  height: 60px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bolder;
+  background: #fff;
+  cursor: pointer;
+}
+
+/*Add right border to all columns except last column*/
+.square:not(:nth-child(3n)) {
+  border-right: 2px solid #333;
+}
+/*Add bottom border to all rows except last row*/
+.flex.flex-row:not(:last-child) .square {
+  border-bottom: 2px solid #333;
 }
