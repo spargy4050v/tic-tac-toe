@@ -46,25 +46,31 @@ function Board({ xIsNext, squares, onPlay}: BoardProps) {
     status = "Next player: " + (xIsNext ? 'X' : 'O');
   }
   
+  const boardRows = [];
+  for(let row = 0; row < 3; row++) {
+    const squaresInRow = [];
+    for(let col = 0; col < 3; col++) {
+      const index = row * 3 + col;
+      squaresInRow.push(
+        <Square
+          key={index}
+          value={squares[index]}
+          onSquareClick={() => handleClick(index)}
+        />
+      );
+    }
+    boardRows.push(
+      <div className="flex flex-row" key={row}>
+        {squaresInRow}
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="status">{status}</div>
       <div className="board">
-        <div className="flex flex-row">
-          <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-          <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-          <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-        </div>
-        <div className="flex flex-row">
-          <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-          <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-          <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-        </div>
-        <div className="flex flex-row">
-          <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-          <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-          <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
-        </div>
+        {boardRows}
       </div>
     </>
 );
@@ -73,11 +79,12 @@ function Board({ xIsNext, squares, onPlay}: BoardProps) {
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+  const [isAscending, setIsAscending] = useState(true);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
   function handlePlay(nextSquares: (string | null)[]) {
-    const nextHistory = ([...history.slice(0, currentMove +1), nextSquares]);
+    const nextHistory = ([...history.slice(0, currentMove + 1), nextSquares]);
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length -1);
   }
@@ -98,13 +105,32 @@ export default function Game() {
     );
   });
 
+const sortedMoves = isAscending ? moves : [...moves].reverse();
+
   return (
     <div className="game">
       <div className="game-board">
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <ol>{moves}</ol>
+        <div className="flex items-center gap-2 mb-2">
+          <span>Sort moves </span>
+          <button 
+            type="button"
+            onClick={() => setIsAscending(!isAscending)}
+            className={`relative w-12 h-6 rounded-full transition-colors 
+              duration-200 ${isAscending ? 'bg-blue-500' : 'bg-gray-400'}`}
+            aria-pressed={isAscending}
+          >
+            <span
+            className={`absolute left-1 top-1 w-4 h-4 rounded-full bg-white 
+              shadow transition-transform duration-200 
+              ${isAscending ? 'translate-x-6' : ''}`}
+            />
+          </button>
+          <span>{isAscending ? ' Ascending' : ' Descending'}</span>
+        </div>
+        <ol>{sortedMoves}</ol>
       </div>
     </div>
   )
