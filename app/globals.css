@@ -60,15 +60,31 @@ body {
 .flex.flex-row:not(:last-child) .square {
   border-bottom: 2px solid #333;
 }
-/*Highlighing the winner squares*/
+/* Update winning square styling */
 .square.winning-square {
-  background-color: var(--highlight-color);
-  animation: pulse 1s infinite alternate;
+  position: relative;
+  color: var(--foreground);
+  background: transparent; /* Remove static background */
+  z-index: 1;
 }
-/*Pulse animation for the winner squares*/
-@keyframes pulse {
-  from { box-shadow: 0 0 0 0 var(--pulse-color); }
-  to { box-shadow: 0 0 0 8px var(--pulse-color), inset 0 0 5px var(--pulse-color)}
+
+/* Make the pseudo-element provide the pulsing background */
+.square.winning-square::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--highlight-color);
+  z-index: -1;
+  animation: pulse-bg 0.8s infinite alternate;
+}
+
+/* Create animation that changes opacity */
+@keyframes pulse-bg {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
 }
 
 button {
@@ -79,29 +95,37 @@ button:disabled {
   cursor: default;
 }
 
-/* Update your .modern-btn class in globals.css */
+/* Update .modern-btn in globals.css */
 .modern-btn {
-  padding: 0.3rem 0.8rem;      /* Reduced padding */
-  border-radius: 0.25rem;      /* Smaller radius */
+  padding: 0.15rem 0.5rem;       /* Reduced padding */
+  border-radius: 0.25rem;
   background: transparent;
   color: var(--foreground);
   font-weight: 500;
-  font-size: 0.9rem;           /* Slightly smaller text */
-  border: 0.5px solid rgba(var(--foreground-rgb), 0.6); /* Semi-transparent border */
-  box-shadow: none;
-  transition: 
-    background 0.15s,
-    color 0.15s,
-    border-color 0.15s,
-    transform 0.1s;
+  font-size: 0.9rem;
+  
+  /* Tighter border */
+  border: 1px solid var(--foreground);
+  display: inline-block;          /* Only take up needed space */
+  text-align: center;
+  white-space: nowrap;           /* Prevent text wrapping */
+  box-shadow: none;              /* Remove shadow for cleaner look */
 }
 
-/* Keep the hover state similar */
-.modern-btn:hover,
-.modern-btn:focus {
-  background: var(--foreground);
+.modern-btn:hover {
+  background-color: var(--foreground);
   color: var(--background);
-  border-color: var(--foreground);
-  transform: translateY(-1px);  /* Removed scale effect which can cause overlap */
-  outline: none;
+}
+
+/* Keep the active effect */
+.modern-btn:active {
+  background-color: var(--foreground);
+  color: var(--background);
+  transform: translateY(1px);
+}
+
+.move-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }

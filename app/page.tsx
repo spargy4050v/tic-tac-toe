@@ -45,7 +45,14 @@ function Board({ xIsNext, squares, onPlay, onReset}: BoardProps) {
   const winner = calculateWinner(squares);
   let status;
   if (winner) {
-    status = "Winner: " + (xIsNext ? 'O' : 'X');
+    status = (
+      <div className="flex items-center gap-x-2">
+        <span>Winner: {(xIsNext ? 'O' : 'X')}</span>
+        <button className="modern-btn" type="button" onClick={onReset}>
+          Play Again
+        </button>
+      </div>
+    );
   } else if (squares.every(square => square !== null)) {
     status = (
       <div className="flex items-center gap-x-2">
