@@ -124,8 +124,43 @@ button:disabled {
   transform: translateY(1px);
 }
 
+.game {
+  position: relative;
+  min-height: 400px;
+}
+
+.game-board {
+  position: sticky;
+  top: 0;
+  margin-bottom: 1rem;
+}
+
 .move-list-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 53vh;
+  overflow-y: auto;
+  padding-right: 8px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .game {
+    flex-direction: column;
+  }
+
+  .game-board {
+    position: static;
+    margin-bottom: 1.5rem;
+  }
+
+  .move-list-container {
+    max-height: 30vh;
+  }
+
+  h1 {
+    margin-bottom: 1rem !important;
+    margin-top: 1rem !important;
+  }
 }
